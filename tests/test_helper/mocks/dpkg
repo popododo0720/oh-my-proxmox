@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+# Mock dpkg — configurable via MOCK_DPKG_EXIT and MOCK_DPKG_OUTPUT
+exit_code="${MOCK_DPKG_EXIT:-0}"
+output="${MOCK_DPKG_OUTPUT:-}"
+[[ -n "${output}" ]] && echo "${output}"
+exit "${exit_code}"
