@@ -1,0 +1,72 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  release:
+    name: Create GitHub Release
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+          fetch-depth: 0
+
+      - name: Install ShellCheck
+        run: sudo apt-get install -y shellcheck
+
+      - name: Run lint
+        run: |
+          SRC_FILES=$(find . -name '*.sh' \
+            -not -path './tests/*' \
+            -not -path './.git/*')
+          SCRIPT_FILES=$(find scripts -name '*.sh' 2>/dev/null || true)
+          ALL_FILES="${SRC_FILES} ${SCRIPT_FILES}"
+          if [[ -n "${ALL_FILES// /}" ]]; then
+            # shellcheck disable=SC2086
+            shellcheck --severity=warning --shell=bash ${ALL_FILES}
+          fi
+
+      - name: Run tests
+        run: |
+          TEST_FILES=$(find tests -name '*.bats' 2>/dev/null || true)
+          if [[ -n "${TEST_FILES}" ]]; then
+            ./tests/bats/bin/bats ${TEST_FILES}
+          fi
+
+      - name: Extract changelog entry
+        id: changelog
+        run: |
+          TAG="${GITHUB_REF_NAME}"
+          # Extract the section for this tag from CHANGELOG.md
+          NOTES=$(awk "/^## \[${TAG#v}\]/{found=1; next} found && /^## /{exit} found{print}" CHANGELOG.md 2>/dev/null || echo "")
+          if [[ -z "${NOTES}" ]]; then
+            NOTES="Release ${TAG}"
+          fi
+          # Save as multiline output
+          {
+            echo "notes<<EOF"
+            echo "${NOTES}"
+            echo "EOF"
+          } >> "${GITHUB_OUTPUT}"
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          name: "oh-my-proxmox ${{ github.ref_name }}"
+          body: |
+            ${{ steps.changelog.outputs.notes }}
+
+            ## Install
+
+            ```bash
+            curl -fsSL https://raw.githubusercontent.com/popododo0720/oh-my-proxmox/main/install.sh | bash
+            ```
+          draft: false
+          prerelease: ${{ contains(github.ref_name, '-') }}
