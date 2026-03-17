@@ -13,10 +13,21 @@ jobs:
       contents: write
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        # Pinned to v4.2.2 (11bd71901bbe5b1630ceea73d27597364c9af683) — supply-chain fix (TES-38 / CR2).
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
         with:
           submodules: recursive
           fetch-depth: 0
+
+      # Security: verify the tagged commit is on main to prevent publishing
+      # releases from arbitrary branches or detached commits (TES-38 / CR2).
+      - name: Verify tag is on main branch
+        run: |
+          git fetch origin main
+          if ! git merge-base --is-ancestor "$GITHUB_SHA" origin/main; then
+            echo "ERROR: Tag is not on main branch. Releases must originate from main." >&2
+            exit 1
+          fi
 
       - name: Install dev dependencies
         run: make deps
@@ -44,7 +55,8 @@ jobs:
           } >> "${GITHUB_OUTPUT}"
 
       - name: Create GitHub Release
-        uses: softprops/action-gh-release@v2
+        # Pinned to v2.6.1 (153bb8e04406b158c6c84fc1615b65b24149a1fe) — supply-chain fix (TES-38 / CR2).
+        uses: softprops/action-gh-release@153bb8e04406b158c6c84fc1615b65b24149a1fe
         with:
           name: "oh-my-proxmox ${{ github.ref_name }}"
           body: |
