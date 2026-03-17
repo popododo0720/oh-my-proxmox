@@ -71,20 +71,15 @@ Commands:
 # List all available plugins
 omp plugin list
 
-# Enable the no-subscription plugin
-omp plugin enable no-subscription
-
-# Enable multiple plugins then install all at once
-omp plugin enable dark-mode
-omp plugin enable base-packages
-omp install
-
 # Diagnose issues
 omp doctor
 
 # Roll back all installed plugins
 omp rollback
 ```
+
+> **Note:** Plugin commands such as `omp plugin enable no-subscription` will be available once
+> plugin directories are added in upcoming releases. See the [Plugin List](#plugin-list) section.
 
 ---
 

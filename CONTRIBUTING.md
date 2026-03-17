@@ -214,8 +214,8 @@ Tests use [bats-core](https://bats-core.readthedocs.io/) (vendored as git submod
 
 ```bash
 make test
-# or
-./tests/bats/bin/bats tests/
+# or run directly
+./tests/bats/bin/bats tests/core
 ```
 
 ### Writing tests
