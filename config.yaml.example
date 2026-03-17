@@ -1,0 +1,25 @@
+# oh-my-proxmox configuration file
+# Copy this file to config.yaml and customize as needed.
+#
+# Default location: /opt/oh-my-proxmox/config.yaml
+# Override with: OMP_CONFIG_FILE=/path/to/config.yaml
+
+# Installation paths
+omp_home: /opt/oh-my-proxmox
+omp_backup_dir: /opt/oh-my-proxmox/backups
+
+# Enabled plugins (in order of installation)
+# Available plugins: no-subscription, dark-mode, base-packages, security
+enabled_plugins:
+  - no-subscription
+  - dark-mode
+  - base-packages
+  - security
+
+# Logging
+log_level: info    # debug, info, warn, error
+log_file: ""       # empty = stderr only
+
+# Update settings
+auto_update: false
+update_branch: main
