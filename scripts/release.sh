@@ -24,6 +24,14 @@ for cmd in git date grep sed; do
   fi
 done
 
+# Derive repository base URL from git remote (avoids hardcoding)
+REPO_URL="$(git -C "${REPO_ROOT}" remote get-url origin 2>/dev/null)" \
+  || die "No 'origin' remote configured. Cannot derive repository URL."
+REPO_URL="${REPO_URL%.git}"
+if [[ "${REPO_URL}" =~ ^git@([^:]+):(.+)$ ]]; then
+  REPO_URL="https://${BASH_REMATCH[1]}/${BASH_REMATCH[2]}"
+fi
+
 # Validate we're on main branch
 current_branch="$(git -C "${REPO_ROOT}" rev-parse --abbrev-ref HEAD)"
 if [[ "${current_branch}" != "main" ]]; then
@@ -72,7 +80,7 @@ if grep -q "## \[Unreleased\]" "${CHANGELOG}"; then
 
   # Update comparison links at the bottom
   # Replace the Unreleased link to point from new version
-  sed -i "s|^\[Unreleased\]:.*|\[Unreleased\]: https://github.com/popododo0720/oh-my-proxmox/compare/${TAG}...HEAD\n[${VERSION}]: https://github.com/popododo0720/oh-my-proxmox/releases/tag/${TAG}|" "${CHANGELOG}"
+  sed -i "s|^\[Unreleased\]:.*|\[Unreleased\]: ${REPO_URL}/compare/${TAG}...HEAD\n[${VERSION}]: ${REPO_URL}/releases/tag/${TAG}|" "${CHANGELOG}"
 
   log "Updated CHANGELOG.md"
 else
