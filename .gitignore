@@ -1,0 +1,6 @@
+tests/tmp/
+tests/.bats-*
+*.swp
+*.swo
+*~
+.DS_Store
