@@ -4,14 +4,21 @@
 
 set -euo pipefail
 
+# ── Resolve install location (safe through symlinks) ──────────────────────
+# readlink -f resolves the real path before dirname, so calling omp via the
+# /usr/local/bin/omp symlink still yields the actual installation directory.
+SCRIPT_DIR="$(cd "$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")" && pwd)"
+
 # ── Default paths ────────────────────────────────────────────────────────────
-OMP_HOME="${OMP_HOME:-/opt/oh-my-proxmox}"
+# OMP_HOME defaults to the directory containing omp.sh (the install location).
+# This ensures --dir=PATH installs read plugins/config from the correct place
+# rather than the hardcoded /opt/oh-my-proxmox.
+OMP_HOME="${OMP_HOME:-${SCRIPT_DIR}}"
 OMP_BACKUP_DIR="${OMP_BACKUP_DIR:-/var/lib/oh-my-proxmox/backups}"
 OMP_CONFIG_FILE="${OMP_CONFIG_FILE:-${OMP_HOME}/config.yaml}"
 export OMP_HOME OMP_BACKUP_DIR OMP_CONFIG_FILE
 
-# ── Source core modules ──────────────────────────────────────────────────────
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+# ── Source core modules ────────────────────────────────────────────────────────────
 # shellcheck source=core/utils.sh
 source "${SCRIPT_DIR}/core/utils.sh"
 # shellcheck source=core/config.sh

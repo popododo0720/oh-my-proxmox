@@ -220,7 +220,8 @@ make test
 
 ### Writing tests
 
-1. Create a `.bats` file in `tests/core/` (for core module tests) or `tests/plugins/` (for plugin tests)
+1. Create a `.bats` file in `tests/core/` (for core module tests)
+   > **Note:** `tests/plugins/` will be added once plugin directories exist.
 2. Load the shared helper at the top:
    ```bash
    load '../test_helper/common-setup'
@@ -281,9 +282,9 @@ make release
 
 This runs `scripts/release.sh` which:
 1. Validates you're on `main`
-2. Bumps version in `VERSION` file
+2. Reads latest tag and prompts for the new version (no `VERSION` file — version is stored in git tags)
 3. Updates `CHANGELOG.md`
-4. Creates a git tag (`v0.1.0`)
-5. Pushes tag → triggers `release.yml` GitHub Action
+4. Creates an annotated git tag (`v0.1.0`)
+5. Pushes commit and tag → triggers `release.yml` GitHub Action
 
 Semantic versioning: `v<major>.<minor>.<patch>`

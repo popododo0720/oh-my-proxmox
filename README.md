@@ -13,8 +13,6 @@ A plugin-based framework for Proxmox VE post-install automation, inspired by [oh
 ```bash
 curl -fsSL https://raw.githubusercontent.com/popododo0720/oh-my-proxmox/main/install.sh | bash
 omp plugin list
-omp plugin enable no-subscription
-omp install
 ```
 
 ---
@@ -92,12 +90,15 @@ omp rollback
 
 ## Plugin List
 
-| Plugin | Description |
-|--------|-------------|
-| `no-subscription` | Remove enterprise subscription nag, add no-subscription repo |
-| `dark-mode` | Enable dark theme in Proxmox web UI |
-| `base-packages` | Install common system utilities (curl, vim, htop, etc.) |
-| `security` | Apply security hardening: fail2ban, SSH hardening, firewall rules |
+> **Note:** Plugins are under development. The table below reflects the planned plugin set;
+> individual plugin directories will be added in upcoming releases.
+
+| Plugin | Description | Status |
+|--------|-------------|--------|
+| `no-subscription` | Remove enterprise subscription nag, add no-subscription repo | coming soon |
+| `dark-mode` | Enable dark theme in Proxmox web UI | coming soon |
+| `base-packages` | Install common system utilities (curl, vim, htop, etc.) | coming soon |
+| `security` | Apply security hardening: fail2ban, SSH hardening, firewall rules | coming soon |
 
 ---
 
