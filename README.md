@@ -26,7 +26,7 @@ curl -fsSL https://raw.githubusercontent.com/popododo0720/oh-my-proxmox/main/ins
 ```
 
 This will:
-1. Download the latest release to `/opt/oh-my-proxmox`
+1. Install the latest release to `/opt/oh-my-proxmox` (falls back to cloning main if no release exists)
 2. Initialize git submodules (bats-core)
 3. Create a default `config.yaml`
 4. Make `omp` available system-wide
