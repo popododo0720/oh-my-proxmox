@@ -86,7 +86,7 @@ omp_plugin_list() {
     # Get description from plugin.yaml if available
     local description=""
     if [[ -f "${plugin_dir}/plugin.yaml" ]]; then
-      description="$(grep "^description:" "${plugin_dir}/plugin.yaml" | sed 's/^description:[[:space:]]*//' | tr -d '"'"'")"
+      description="$(grep "^description:" "${plugin_dir}/plugin.yaml" | sed 's/^description:[[:space:]]*//' | tr -d '"'"'" || true)"
     fi
 
     printf "%-25s %-10s %s\n" "${plugin_name}" "${status}" "${description}"
@@ -168,7 +168,7 @@ omp_plugin_disable() {
 
   # Remove from enabled_plugins list
   local new_enabled
-  new_enabled="$(echo "${enabled_plugins}" | tr ' ' '\n' | grep -v "^${plugin_name}$" | tr '\n' ' ' | sed 's/[[:space:]]*$//')"
+  new_enabled="$(echo "${enabled_plugins}" | tr ' ' '\n' | grep -v "^${plugin_name}$" | tr '\n' ' ' | sed 's/[[:space:]]*$//' || true)"
   omp_config_set "enabled_plugins" "${new_enabled}"
   omp_log "Plugin disabled: ${plugin_name}"
 }

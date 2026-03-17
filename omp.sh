@@ -144,7 +144,9 @@ cmd_doctor() {
   fi
 
   # Check connectivity
-  if curl -s --max-time 5 https://github.com &>/dev/null; then
+  if ! command -v curl &>/dev/null; then
+    omp_warn "Network: curl not found — cannot check connectivity"
+  elif curl -s --max-time 5 https://github.com &>/dev/null; then
     omp_log "Network: OK (reached github.com)"
   else
     omp_warn "Network: Cannot reach github.com"
