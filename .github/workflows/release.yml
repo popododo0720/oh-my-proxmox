@@ -18,27 +18,14 @@ jobs:
           submodules: recursive
           fetch-depth: 0
 
-      - name: Install ShellCheck
-        run: sudo apt-get install -y shellcheck
+      - name: Install dev dependencies
+        run: make deps
 
       - name: Run lint
-        run: |
-          SRC_FILES=$(find . -name '*.sh' \
-            -not -path './tests/*' \
-            -not -path './.git/*')
-          SCRIPT_FILES=$(find scripts -name '*.sh' 2>/dev/null || true)
-          ALL_FILES="${SRC_FILES} ${SCRIPT_FILES}"
-          if [[ -n "${ALL_FILES// /}" ]]; then
-            # shellcheck disable=SC2086
-            shellcheck --severity=warning --shell=bash ${ALL_FILES}
-          fi
+        run: make lint
 
       - name: Run tests
-        run: |
-          TEST_FILES=$(find tests -name '*.bats' 2>/dev/null || true)
-          if [[ -n "${TEST_FILES}" ]]; then
-            ./tests/bats/bin/bats ${TEST_FILES}
-          fi
+        run: make test
 
       - name: Extract changelog entry
         id: changelog

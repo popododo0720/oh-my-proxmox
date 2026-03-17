@@ -17,18 +17,5 @@ jobs:
       - name: Install ShellCheck
         run: sudo apt-get install -y shellcheck
 
-      - name: Run ShellCheck
-        run: |
-          SRC_FILES=$(find . -name '*.sh' \
-            -not -path './tests/*' \
-            -not -path './.git/*' \
-            -not -path './scripts/*')
-          # Also lint scripts/
-          SCRIPT_FILES=$(find scripts -name '*.sh' 2>/dev/null || true)
-          ALL_FILES="${SRC_FILES} ${SCRIPT_FILES}"
-          if [[ -n "${ALL_FILES// /}" ]]; then
-            # shellcheck disable=SC2086
-            shellcheck --severity=warning --shell=bash ${ALL_FILES}
-          else
-            echo "No .sh files found to lint."
-          fi
+      - name: Run lint
+        run: make lint

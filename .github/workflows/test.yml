@@ -16,11 +16,5 @@ jobs:
         with:
           submodules: recursive
 
-      - name: Run bats tests
-        run: |
-          TEST_FILES=$(find tests -name '*.bats' 2>/dev/null || true)
-          if [[ -n "${TEST_FILES}" ]]; then
-            ./tests/bats/bin/bats ${TEST_FILES}
-          else
-            echo "No .bats test files found."
-          fi
+      - name: Run tests
+        run: make test
