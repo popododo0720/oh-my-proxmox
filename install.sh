@@ -66,7 +66,9 @@ require_cmd curl
 get_latest_release() {
   local api_url="https://api.github.com/repos/popododo0720/oh-my-proxmox/releases/latest"
   local version
-  version="$(curl -sf "${api_url}" | grep '"tag_name":' | sed 's/.*"tag_name":[[:space:]]*"\([^"]*\)".*/\1/')"
+  version="$(curl -sf "${api_url}" 2>/dev/null \
+    | grep '"tag_name":' \
+    | sed 's/.*"tag_name":[[:space:]]*"\([^"]*\)".*/\1/' || true)"
   echo "${version:-main}"
 }
 
@@ -95,10 +97,8 @@ else
   else
     # Fresh install
     log "Installing oh-my-proxmox to ${INSTALL_DIR}..."
-    if [[ -d "${INSTALL_DIR}" ]]; then
-      log "Directory ${INSTALL_DIR} already exists — installing into it"
-      git clone "${REPO_URL}" "${INSTALL_DIR}" --branch "${RELEASE_TAG}" 2>/dev/null \
-        || git clone "${REPO_URL}" "${INSTALL_DIR}"
+    if [[ -d "${INSTALL_DIR}" ]] && [[ -n "$(ls -A "${INSTALL_DIR}")" ]]; then
+      error "${INSTALL_DIR} exists and is not empty. Remove it or use --dir= to specify a different path."
     else
       git clone "${REPO_URL}" "${INSTALL_DIR}" --branch "${RELEASE_TAG}" 2>/dev/null \
         || git clone "${REPO_URL}" "${INSTALL_DIR}"
