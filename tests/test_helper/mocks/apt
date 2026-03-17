@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+# Mock apt — configurable via MOCK_APT_EXIT and MOCK_APT_OUTPUT
+exit_code="${MOCK_APT_EXIT:-0}"
+output="${MOCK_APT_OUTPUT:-Reading package lists... Done}"
+echo "${output}"
+exit "${exit_code}"

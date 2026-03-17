@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+# Mock apt-get — configurable via MOCK_APTGET_EXIT and MOCK_APTGET_OUTPUT
+exit_code="${MOCK_APTGET_EXIT:-0}"
+output="${MOCK_APTGET_OUTPUT:-}"
+[[ -n "${output}" ]] && echo "${output}"
+exit "${exit_code}"

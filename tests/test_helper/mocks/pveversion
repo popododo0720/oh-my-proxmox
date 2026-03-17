@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+# Mock pveversion — configurable via MOCK_PVEVERSION_EXIT and MOCK_PVEVERSION_OUTPUT
+exit_code="${MOCK_PVEVERSION_EXIT:-0}"
+output="${MOCK_PVEVERSION_OUTPUT:-pve-manager/8.1.4/b46aac3b42da5d15 (running kernel: 6.2.16-19-pve)}"
+echo "${output}"
+exit "${exit_code}"
