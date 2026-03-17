@@ -2,7 +2,7 @@ SHELL := /bin/bash
 SHELLCHECK_FLAGS := --severity=warning --shell=bash
 BATS := ./tests/bats/bin/bats
 SRC_FILES := $(shell find . -name '*.sh' -not -path './tests/*' -not -path './.git/*')
-TEST_FILES := $(shell find tests -name '*.bats' 2>/dev/null)
+TEST_FILES := $(shell find tests -name '*.bats' -not -path 'tests/bats/*' -not -path 'tests/test_helper/*' 2>/dev/null)
 
 .PHONY: lint test install uninstall release clean deps
 
