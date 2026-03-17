@@ -16,7 +16,11 @@ if command -v shellcheck &>/dev/null; then
 else
   log "Installing shellcheck..."
   if command -v apt-get &>/dev/null; then
-    sudo apt-get install -y shellcheck
+    if [[ "${EUID}" -eq 0 ]]; then
+      apt-get install -y shellcheck
+    else
+      sudo apt-get install -y shellcheck
+    fi
   elif command -v brew &>/dev/null; then
     brew install shellcheck
   else

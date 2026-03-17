@@ -23,9 +23,9 @@ if [[ "${current_branch}" != "main" ]]; then
   die "Releases must be cut from main branch. Current branch: ${current_branch}"
 fi
 
-# Ensure working tree is clean
-if ! git -C "${REPO_ROOT}" diff --quiet HEAD; then
-  die "Working tree has uncommitted changes. Commit or stash before releasing."
+# Ensure working tree is clean (includes untracked files)
+if [[ -n "$(git -C "${REPO_ROOT}" status --porcelain --untracked-files=all)" ]]; then
+  die "Working tree is dirty (uncommitted changes or untracked files). Commit or stash before releasing."
 fi
 
 # Determine version
