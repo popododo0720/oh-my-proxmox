@@ -17,6 +17,13 @@ die() {
   exit 1
 }
 
+# Validate required commands
+for cmd in git date grep sed; do
+  if ! command -v "${cmd}" &>/dev/null; then
+    die "${cmd} is required but not found. Please install ${cmd}."
+  fi
+done
+
 # Validate we're on main branch
 current_branch="$(git -C "${REPO_ROOT}" rev-parse --abbrev-ref HEAD)"
 if [[ "${current_branch}" != "main" ]]; then

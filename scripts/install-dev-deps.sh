@@ -10,6 +10,12 @@ log() {
   echo "[install-dev-deps] $*"
 }
 
+# Validate required commands
+if ! command -v git &>/dev/null; then
+  echo "ERROR: git is required but not found. Please install git." >&2
+  exit 1
+fi
+
 # Install shellcheck if not present
 if command -v shellcheck &>/dev/null; then
   log "shellcheck already installed: $(shellcheck --version | head -1)"
@@ -19,6 +25,10 @@ else
     if [[ "${EUID}" -eq 0 ]]; then
       apt-get install -y shellcheck
     else
+      if ! command -v sudo &>/dev/null; then
+        echo "ERROR: sudo is required to install shellcheck as non-root but was not found." >&2
+        exit 1
+      fi
       sudo apt-get install -y shellcheck
     fi
   elif command -v brew &>/dev/null; then
@@ -38,7 +48,7 @@ git submodule update --init --recursive
 
 log "Verifying bats-core..."
 if [[ -x "${REPO_ROOT}/tests/bats/bin/bats" ]]; then
-  log "bats-core ready: $(${REPO_ROOT}/tests/bats/bin/bats --version)"
+  log "bats-core ready: $("${REPO_ROOT}/tests/bats/bin/bats" --version)"
 else
   echo "ERROR: bats-core not found at tests/bats/bin/bats" >&2
   exit 1
